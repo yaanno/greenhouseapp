@@ -1,3 +1,6 @@
 [submodule "assets/js/lib/jquery"]
 	path = assets/js/lib/jquery
 	url = git://github.com/jquery/jquery.git
+[submodule "assets/js/lib/sammy"]
+	path = assets/js/lib/sammy
+	url = git://github.com/quirkey/sammy.git

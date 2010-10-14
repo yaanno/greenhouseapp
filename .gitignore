@@ -1,5 +1,4 @@
 # we don't need the libs
-/assets/js/lib/sammy
 
 # we don't need temporary data
 /data/
