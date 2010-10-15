@@ -1,0 +1,39 @@
+
+<div id="product-<%= product.id %>" class='product' itemscope itemtype="http://data-vocabulary.org/Product">
+    <%
+        var title_slug = product.title.replace(/ /g,'-');
+    %>
+    <h2 itemprop="name">
+        <a href="#/product/<%= title_slug %>/<%= product.id %>">
+            <%= product.title %>
+        </a>
+    </h2>
+    <p class='description' itemprop="description">
+        <%= product.description %>
+    </p>
+    <ul>
+        <% for(var category in product.categories) { %>
+            <%
+                var cat = product.categories[category],
+                    slug = cat.title.replace(' ', '-');
+            %>
+        <li class="category" itemprop="category">
+            <%= link_to(cat.title, '#/products/by_tag/' + slug) %>
+        </li>
+        <% } %>
+    </ul>
+    <p>
+        <span class="price" itemprop="price"><%= product.price %>$</span>
+        <form action="#/cart" method="post" accept-charset="utf-8">
+            <label>
+                Amount:
+                <select name="amount">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </label>
+            <input type="hidden" name="id" value="<%= product.id %>">
+            <input type="submit" name="submit" value="Buy">
+        </form>
+    </p>
+</div>
