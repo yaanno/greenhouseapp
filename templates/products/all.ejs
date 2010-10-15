@@ -6,12 +6,18 @@
                 var title_slug = products[product].title.replace(/ /g,'-');
             %>
             <h2 itemprop="name">
-                <a href="#product/<%= title_slug %>/<%= products[product].id %>">
+                <a href="#/product/<%= title_slug %>/<%= products[product].id %>">
                     <%= products[product].title %>
                 </a>
             </h2>
             <p class='description' itemprop="description">
-                <%= products[product].description %>
+                <% 
+                    var description = products[product].description;
+                    if (description.length > 60) {
+                        description = description.substring(0, 60).concat(' ...');
+                    }
+                %>
+                <%= description %>
             </p>
             <ul>
                 <% for(var category in products[product].categories) { %>

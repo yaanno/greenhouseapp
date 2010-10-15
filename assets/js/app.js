@@ -1,4 +1,4 @@
-//(function ($, ejs) {
+(function ($) {
     
     // main app
     var app = $.sammy(function () {
@@ -29,7 +29,7 @@
                 this.log('no products in store')
                 // no products in store, display feedback
             } else {
-                // render shit
+                // render products
                 render(data, 'products/all');
             }
         });
@@ -64,6 +64,25 @@
             }
             this.log('end before check')
         })
+        
+        this.get('#/product/:name/:id', function (context) {
+            var product_id = this.params['id'],
+                data = store.get('products'),
+                product = null;
+            $.each(data.products, function (index, item) {
+                if (+item.id === +product_id) {
+                    product = item;
+                    return;
+                }
+            });
+            
+            if (product) {
+                app.log(product);
+                product = { product: product }
+                render(product, 'products/show');
+            }
+            
+        });
         
         // utility functions
         
@@ -114,36 +133,7 @@
             
         });
         
-        $('.buy').live('click', function () {
-            var elem = $(this).parents('.product'),
-                id = +elem[0].id.replace('product-',''),
-                product = null,
-                data = store.get('products');
-            
-            $.each(data.products, function (index, item) {
-                // TODO: stop the iterator when id matches
-                if (item.id === id) {
-                    product = item;
-                }
-            });
-            
-            console.log(product)
-            
-            if (product) {
-                $.ajax({
-                    url: '#/cart',
-                    type: 'POST',
-                    data: { product: product },
-                    success: function (data) {
-                        //store.set('products', data);
-                        // TODO: make this evented instead
-                        //render(data, 'products/all');
-                        app.log(data)
-                    }
-                });
-            }
-            
-        });
+        // TODO: cart should be a separate app
         
         this.post('#/cart', function (context) {
             var data = store.get('products'),
@@ -178,4 +168,4 @@
         app.run('#/');
     });
     
-//})(jQuery, EJS);
+})(jQuery);

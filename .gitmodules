@@ -4,3 +4,6 @@
 [submodule "assets/js/lib/sammy"]
 	path = assets/js/lib/sammy
 	url = git://github.com/quirkey/sammy.git
+[submodule "assets/js/lib/js-model"]
+	path = assets/js/lib/js-model
+	url = git://github.com/benpickles/js-model.git

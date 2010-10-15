@@ -2,7 +2,7 @@
 
 ## Description
 
-Green House App is a (Tea House Shop) web application for demo purposes using HTML5 APIs and built for handheld devices. The App is based on [jQuery](http://jquery.com) and [Sammy](http://code.quirkey.com/sammy) JavaScript frameworks.
+Green House App is a (Tea House Shop) web application for demo purposes using HTML5 APIs and built for handheld devices. The App is based on [jQuery](http://jquery.com) and [Sammy](http://code.quirkey.com/sammy) JavaScript frameworks. For data models and persistence it will use (js-model)[http://github.com/benpickles/js-model].
 
 ## Get the code
 
