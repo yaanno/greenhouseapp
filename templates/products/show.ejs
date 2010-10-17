@@ -1,4 +1,7 @@
-
+<%
+    var product = this.attributes;
+    console.log(product)
+%>
 <div id="product-<%= product.id %>" class='product' itemscope itemtype="http://data-vocabulary.org/Product">
     <%
         var title_slug = product.title.replace(/ /g,'-');
@@ -15,10 +18,10 @@
         <% for(var category in product.categories) { %>
             <%
                 var cat = product.categories[category],
-                    slug = cat.title.replace(' ', '-');
+                    slug = cat.replace(' ', '-');
             %>
         <li class="category" itemprop="category">
-            <%= link_to(cat.title, '#/products/by_tag/' + slug) %>
+            <%= link_to(cat, '#/products/by_tag/' + slug) %>
         </li>
         <% } %>
     </ul>

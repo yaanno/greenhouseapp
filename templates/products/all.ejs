@@ -1,18 +1,20 @@
 <ul>
-    <% for(var product in products) { %>
+    <% var collection = this;
+        for(var item in collection) { 
+    %>
     <li>
-        <div id="product-<%= products[product].id %>" class='product' itemscope itemtype="http://data-vocabulary.org/Product">
+        <div id="product-<%= collection[item].attributes.id %>" class='product' itemscope itemtype="http://data-vocabulary.org/Product">
             <%
-                var title_slug = products[product].title.replace(/ /g,'-');
+                var title_slug = collection[item].attributes.title.replace(/ /g,'-');
             %>
             <h2 itemprop="name">
-                <a href="#/product/<%= title_slug %>/<%= products[product].id %>">
-                    <%= products[product].title %>
+                <a href="#/product/<%= title_slug %>/<%= collection[item].attributes.id %>">
+                    <%= collection[item].attributes.title %>
                 </a>
             </h2>
             <p class='description' itemprop="description">
                 <% 
-                    var description = products[product].description;
+                    var description = collection[item].attributes.description;
                     if (description.length > 60) {
                         description = description.substring(0, 60).concat(' ...');
                     }
@@ -20,18 +22,18 @@
                 <%= description %>
             </p>
             <ul>
-                <% for(var category in products[product].categories) { %>
+                <% for(var category in collection[item].attributes.categories) { %>
                     <%
-                        var cat = products[product].categories[category],
-                            slug = cat.title.replace(' ', '-');
+                        var cat = collection[item].attributes.categories[category],
+                            slug = cat.replace(' ', '-');
                     %>
                 <li class="category" itemprop="category">
-                    <%= link_to(cat.title, '#/products/by_tag/' + slug) %>
+                    <%= link_to(cat, '#/products/by_tag/' + slug) %>
                 </li>
                 <% } %>
             </ul>
             <p>
-                <span class="price" itemprop="price"><%= products[product].price %>$</span>
+                <span class="price" itemprop="price"><%= collection[item].attributes.price %>$</span>
                 <form action="#/cart" method="post" accept-charset="utf-8">
                     <label>
                         Amount:
@@ -40,7 +42,7 @@
                             <option value="2">2</option>
                         </select>
                     </label>
-                    <input type="hidden" name="id" value="<%= products[product].id %>">
+                    <input type="hidden" name="id" value="<%= collection[item].attributes.id %>">
                     <input type="submit" name="submit" value="Buy">
                 </form>
             </p>
