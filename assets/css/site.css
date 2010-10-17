@@ -12,9 +12,13 @@ h2 { font-size: 125%; }
 
 nav li { display: inline-block; }
 
+#breadcrumb li { display: inline-block; }
+
+#breadcrumb li:after { content: ' >'; }
+
 #content { overflow: hidden; }
 
-#content > ul > li { float: left; width: 12em; }
+#content > ul > li { /*float: left; width: 12em;*/ }
 
 #content .product { padding: 1em; }
 

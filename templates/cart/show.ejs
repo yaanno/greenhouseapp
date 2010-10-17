@@ -1,0 +1,25 @@
+<ul>
+    <% var data = this,
+           len = data.length,
+           i = 0,
+           cart,
+           product,
+           row_total,
+           total = 0;
+        for(i; i < len; i += 1) {
+            cart = data[i][0];
+            product = data[i][1];
+            row_total = product.attributes.price * cart.attributes.amount;
+            total += row_total;
+    %>
+    <li>
+        <h3><%= product.attributes.title %></h3>
+        <p>
+            <%= cart.attributes.amount %> x <%= product.attributes.price %> USD = <%= row_total %> USD
+        </p>
+    </li>
+    <% } %>
+</ul>
+<p>
+    Total: <%= total %> USD
+</p>
