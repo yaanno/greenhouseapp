@@ -3,12 +3,33 @@
 
 (function ($) {
     
+    // constants
+    
+    var productapi = 'data/products.json';
+    
+    // utility functions
+    
+    $("#feedback").ajaxSend(function (event, request, options) {
+        //console.log(options, event, request)
+        $(this).show();
+    });
+    
+    $("#feedback").ajaxComplete(function (event, request, options) {
+        //console.log(options, event, request)
+        if (options.url == productapi) {
+            app.trigger('products-downloaded', request)
+        }
+        $(this).hide();
+    });
+    
     var render = function (opts) {
         var html = new EJS({
             url: 'templates/' + opts.template + '.ejs'
         }).render(opts.data);
         opts.app.swap(html);
     },
+    
+    // models
     
     User = new Model('user', {
         persistence: Model.localStorage()
@@ -48,7 +69,25 @@
         // content area
         this.element_selector = '#content';
         
+        this.bind('products-downloaded', function (event, data) {
+            this.log(event, data);
+            // trigger save data
+        });
+        
+        this.bind('products-saved', function (event, data) {
+            // trigger render
+        });
+        
         // views {
+        
+        // dummy model loader
+        this.before({}, function (context) {
+            this.log('process before every path');
+            User.load();
+            Order.load();
+            Cart.load();
+            Product.load();
+        })
         
         // view for home
         this.get('#/', function (context) {
@@ -74,12 +113,12 @@
                         dataType: 'json',
                         success: function (data) {
                             var product_item;
-                            if (data.length > 0) {
+                            /*if (data.length > 0) {
                                 $.each(data, function (index, item) {
                                     product_item = new Product(item);
                                     product_item.save();
                                 });
-                            }
+                            }*/
                         },
                         error: function (x, y, z) {
                             app.log('error: ', x, y, z);
@@ -91,8 +130,8 @@
             });
         });
         
+        // view for product item
         this.get('#/product/:name/:id', function (context) {
-            console.log(context)
             var product = Product.find(this.params.id),
                 out = {
                     app: this,
@@ -100,16 +139,6 @@
                     template: 'products/show'
                 };
             render(out);
-        });
-        
-        // utility functions
-        
-        $("#feedback").ajaxStart(function () {
-            $(this).show();
-        });
-        
-        $("#feedback").ajaxComplete(function () {
-            $(this).hide();
         });
         
         // view for product listing filtered by tag name
@@ -150,15 +179,7 @@
                         }
                     });
                 }
-                
-
             }
-        });
-        
-        this.before('#/cart', function() {
-            Cart.load(function (items) {
-                // check if empty etc
-            });
         });
         
         this.get('#/cart', function (context) {
