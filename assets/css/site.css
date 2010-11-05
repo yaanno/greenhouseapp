@@ -30,4 +30,4 @@ nav li { display: inline-block; }
 #content .category a:active,
 #content .category a:hover { background: green; }
 
-#feedback { position: absolute; background: rgba(0,0,0,.8); color: #fff; font: bold 100% Arial; -webkit-border-radius: .5em; -moz-border-radius: .5em; border-radius: .5em; padding: .4em .5em; }
+#feedback { position: absolute; background: rgba(0,0,0,.8); color: #fff; font: bold 100% Arial; -webkit-border-radius: .5em; -moz-border-radius: .5em; border-radius: .5em; padding: .4em .5em; top: 1em; }

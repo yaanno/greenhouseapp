@@ -5,28 +5,27 @@
     
     // constants
     
-    var productapi = 'data/products.json';
+    var productapi = 'data/products.json',
+        $feedbackDiv = $('#feedback'),
+        $syncBtn = $('#sync');
     
     // utility functions
     
     $("#feedback").ajaxSend(function (event, request, options) {
-        //console.log(options, event, request)
-        $(this).show();
+        app.trigger('feedback', { message: 'Loading data, please wait ...' });
     });
     
     $("#feedback").ajaxComplete(function (event, request, options) {
-        //console.log(options, event, request)
         if (options.url == productapi) {
-            app.trigger('products-downloaded', request)
+            app.trigger('products-downloaded', request.responseText);
         }
-        $(this).hide();
     });
     
-    var render = function (opts) {
+    var render = function (params) {
         var html = new EJS({
-            url: 'templates/' + opts.template + '.ejs'
-        }).render(opts.data);
-        opts.app.swap(html);
+            url: 'templates/' + params.template + '.ejs'
+        }).render(params.data);
+        params.app.swap(html);
     },
     
     // models
@@ -69,20 +68,59 @@
         // content area
         this.element_selector = '#content';
         
-        this.bind('products-downloaded', function (event, data) {
-            this.log(event, data);
-            // trigger save data
+        this.bind('feedback', function (event, data) {
+            this.log('bind.feedback', data)
+            $feedbackDiv
+                .text(data.message)
+                .show()
+                .animate({
+                    opacity: 'toggle'
+                }, 3600);
         });
         
-        this.bind('products-saved', function (event, data) {
-            // trigger render
+        this.bind('sync', function (event, data) {
+            this.log('bind.sync')
+            $.ajax({
+                url: 'data/products.json',
+                dataType: 'json',
+                success: function (data) {
+                    app.trigger('save', data);
+                }
+            });
+        });
+        
+        this.bind('save', function (event, data) {
+            this.log('bind.save', data)
+            // trigger saved
+            if (data.length > 0) {
+                $.each(data, function (index, item) {
+                    product_item = new Product(item);
+                    product_item.save();
+                });
+            }
+            this.trigger('saved', data);
+        });
+        
+        this.bind('saved', function (event, data) {
+            this.log('bind.saved', data)
+            this.redirect('#/products')
+        });
+        
+        this.bind('render', function (event, data) {
+            this.log('bind.render', data)
+            render(data);
+        });
+        
+        $syncBtn.bind('click', function (event) {
+            event.preventDefault();
+            app.trigger('sync');
         });
         
         // views {
         
         // dummy model loader
         this.before({}, function (context) {
-            this.log('process before every path');
+            this.log('load models');
             User.load();
             Order.load();
             Cart.load();
@@ -96,38 +134,17 @@
         
         // view for product listing
         this.get('#/products', function (context) {
-            var products = Product.all(),
-            out = {
-                app: this,
-                data: products,
-                template: 'products/all'
-            };
-            render(out);
-        });
-        
-        this.before('#/products', function (context) {
-            Product.load(function (products) {
-                if (!products.length) {
-                    $.ajax({
-                        url: 'data/products.json',
-                        dataType: 'json',
-                        success: function (data) {
-                            var product_item;
-                            /*if (data.length > 0) {
-                                $.each(data, function (index, item) {
-                                    product_item = new Product(item);
-                                    product_item.save();
-                                });
-                            }*/
-                        },
-                        error: function (x, y, z) {
-                            app.log('error: ', x, y, z);
-                        }
-                    });
-                } else {
-                    // do before stuff with products
-                }
-            });
+            var products = Product.all();
+            if (products.length) {
+                var out = {
+                    app: this,
+                    data: products,
+                    template: 'products/all'
+                };
+                this.trigger('render', out);
+            } else {
+                this.trigger('sync');
+            }
         });
         
         // view for product item
@@ -138,7 +155,7 @@
                     data: product,
                     template: 'products/show'
                 };
-            render(out);
+            this.trigger('render', out);
         });
         
         // view for product listing filtered by tag name
@@ -150,7 +167,7 @@
                     data: products,
                     template: 'products/all'
                 };
-            render(out);
+            this.trigger('render', out);
         });
         
         this.post('#/cart', function (context) {
@@ -166,7 +183,8 @@
                     var old_amount = cart_item.attr('amount');
                     cart_item.attr('amount', old_amount + amount);
                     cart_item.save();
-                    console.log('item updated')
+                    console.log('cart updated')
+                    this.trigger('feedback', { message: 'product added' })
                 } else {
                     cart_item = new Cart({
                         product_id: product.id(), // TODO: replace with assoc
@@ -197,7 +215,7 @@
                 data: data,
                 template: 'cart/show'
             };
-        render(out);
+            this.trigger('render', out);
         });
         
         // } views
