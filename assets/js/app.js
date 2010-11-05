@@ -92,6 +92,7 @@
         });
         
         this.get('#/product/:name/:id', function (context) {
+            console.log(context)
             var product = Product.find(this.params.id),
                 out = {
                     app: this,
