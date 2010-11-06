@@ -6,18 +6,19 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
         <link rel="apple-touch-icon" href="assets/img/touch-icon.png">
+        <link href='http://fonts.googleapis.com/css?family=Neucha&subset=latin' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="assets/css/site.css">
     </head>
     <body>
-        <p>
+        <p style="display:none">
             <button type="button" onclick="localStorage.clear();">Clear storage</button>
             <button type="button" id="sync">Sync data</button>
         </p>
         <nav>
             <ul>
-                <li><a href="#/">Home</a></li>
-                <li><a href="#/products">Products</a></li>
-                <li><a href="#/cart">Cart</a></li>
+                <li id="home"><a href="#/">Home</a></li>
+                <li id="products"><a href="#/products">Products</a></li>
+                <li id="cart"><a href="#/cart">Cart</a></li>
             </ul>
         </nav>
         

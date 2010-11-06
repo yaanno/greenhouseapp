@@ -9,14 +9,15 @@
         for(i; i < len; i += 1) {
             cart = data[i][0];
             product = data[i][1];
-            row_total = product.attributes.price * cart.attributes.amount;
-            total += row_total;
+            subtotal = product.attributes.price * cart.attributes.amount;
+            total += subtotal;
+            // console.log(cart.uid, product.uid)
     %>
     <li>
-        <h3><%= product.attributes.title %></h3>
-        <p>
-            <%= cart.attributes.amount %> x <%= product.attributes.price %> USD = <%= row_total %> USD
-        </p>
+        Product: <%= product.attributes.title %>
+        Amount: <%= cart.attributes.amount %>
+        Price: <%= product.attributes.price %> USD
+        Subtotal: <%= subtotal %> USD
     </li>
     <% } %>
 </ul>

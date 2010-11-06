@@ -1,4 +1,4 @@
-<ul>
+<ul id="product-list">
     <% var collection = this;
         for(var item in collection) { 
     %>
@@ -32,8 +32,8 @@
                 </li>
                 <% } %>
             </ul>
-            <p>
-                <span class="price" itemprop="price"><%= collection[item].attributes.price %>$</span>
+            <div class="buy">
+                Price: <span class="price" itemprop="price"><%= collection[item].attributes.price %>$</span>
                 <form action="#/cart" method="post" accept-charset="utf-8">
                     <label>
                         Amount:
@@ -45,7 +45,7 @@
                     <input type="hidden" name="id" value="<%= collection[item].attributes.id %>">
                     <input type="submit" name="submit" value="Buy">
                 </form>
-            </p>
+            </div>
         </div>
     </li>
     <% } %>

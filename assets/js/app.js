@@ -1,5 +1,5 @@
 /*jslint browser: true */
-/*globals Model, EJS, jQuery */
+/*globals Model, EJS, jQuery, app */
 
 (function ($) {
     
@@ -16,7 +16,7 @@
     });
     
     $("#feedback").ajaxComplete(function (event, request, options) {
-        if (options.url == productapi) {
+        if (options.url === productapi) {
             app.trigger('products-downloaded', request.responseText);
         }
     });
@@ -69,19 +69,20 @@
         this.element_selector = '#content';
         
         this.bind('feedback', function (event, data) {
-            this.log('bind.feedback', data)
+            this.log('bind.feedback', data);
             $feedbackDiv
                 .text(data.message)
                 .show()
                 .animate({
                     opacity: 'toggle'
-                }, 3600);
+                }, 1200);
         });
         
+        // get products from server
         this.bind('sync', function (event, data) {
-            this.log('bind.sync')
+            this.log('bind.sync');
             $.ajax({
-                url: 'data/products.json',
+                url: productapi,
                 dataType: 'json',
                 success: function (data) {
                     app.trigger('save', data);
@@ -89,9 +90,11 @@
             });
         });
         
+        // save products to local storage
         this.bind('save', function (event, data) {
-            this.log('bind.save', data)
+            this.log('bind.save', data);
             // trigger saved
+            var product_item = null;
             if (data.length > 0) {
                 $.each(data, function (index, item) {
                     product_item = new Product(item);
@@ -101,13 +104,15 @@
             this.trigger('saved', data);
         });
         
+        // do something with saved products
         this.bind('saved', function (event, data) {
-            this.log('bind.saved', data)
-            this.redirect('#/products')
+            this.log('bind.saved', data);
+            this.redirect('#/products');
         });
         
+        // render anything
         this.bind('render', function (event, data) {
-            this.log('bind.render', data)
+            this.log('bind.render', data);
             render(data);
         });
         
@@ -125,14 +130,14 @@
             Order.load();
             Cart.load();
             Product.load();
-        })
+        });
         
-        // view for home
+        // show home
         this.get('#/', function (context) {
             context.app.swap('');
         });
         
-        // view for product listing
+        // list products
         this.get('#/products', function (context) {
             var products = Product.all();
             if (products.length) {
@@ -147,7 +152,7 @@
             }
         });
         
-        // view for product item
+        // show product item
         this.get('#/product/:name/:id', function (context) {
             var product = Product.find(this.params.id),
                 out = {
@@ -158,7 +163,7 @@
             this.trigger('render', out);
         });
         
-        // view for product listing filtered by tag name
+        // product listing filtered by tag name
         this.get('#/products/by_tag/:tag', function (context) {
             var tag = this.params.tag.replace('-', ' '),
                 products = Product.find_by_tag(tag),
@@ -170,21 +175,20 @@
             this.trigger('render', out);
         });
         
+        // add item to cart
         this.post('#/cart', function (context) {
             var product = Product.find(this.params.id),
                 amount = +this.params.amount,
                 cart_item = Cart.detect(function () {
-                    return this.attr('product_id') == product.id();
+                    return this.attr('product_id') === product.id();
                 });
             
             if (product) {
-                
                 if (cart_item) {
                     var old_amount = cart_item.attr('amount');
                     cart_item.attr('amount', old_amount + amount);
                     cart_item.save();
-                    console.log('cart updated')
-                    this.trigger('feedback', { message: 'product added' })
+                    app.log('cart updated');
                 } else {
                     cart_item = new Cart({
                         product_id: product.id(), // TODO: replace with assoc
@@ -193,18 +197,27 @@
                     });
                     cart_item.save(function (success) {
                         if (success) {
-                            console.log('item saved')
+                            app.log('item saved');
                         }
                     });
                 }
+                this.trigger('feedback', { message: 'product added' });
             }
         });
         
+        // modify cart
+        this.put('#/cart', function (context) {
+            var cart = Cart.find(this.params[':id']);
+            cart.destroy();
+        });
+        
+        // show cart
         this.get('#/cart', function (context) {
             // display cart content
             var cart = Cart.all(),
-                data = [];
-            $.each(cart, function(index, item) {
+                data = [],
+                out = {};
+            $.each(cart, function (index, item) {
                 data.push([
                     item,
                     Product.find(+item.attr('product_id'))
@@ -219,12 +232,7 @@
         });
         
         // } views
-        
-    })
-    
-    // TODO: define the following apps here:
-    // breadcrumb: display the current path
-    // user: display and manage user states
+    });
     
     // main call
     $(function () {
