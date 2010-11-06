@@ -15,11 +15,12 @@
             <p class='description' itemprop="description">
                 <% 
                     var description = collection[item].attributes.description;
-                    if (description.length > 60) {
-                        description = description.substring(0, 60).concat(' ...');
+                    if (description.length > 100) {
+                        description = description.substring(0, 100).concat(' ...');
                     }
                 %>
-                <%= description %>
+                <img src="assets/img/bag.jpeg" alt="<%= collection[item].attributes.title %>">
+                <span><%= description %></span>
             </p>
             <ul>
                 <% for(var category in collection[item].attributes.categories) { %>

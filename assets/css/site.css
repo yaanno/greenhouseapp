@@ -90,7 +90,22 @@ nav a { color: rgb(256, 256, 256); display: inline-block; padding: .5em; }
     -webkit-transition: all 0.3s ease-in;
     color: rgba(124,118,73,.8);
     text-shadow: 1px 1px 1px rgba(238,236,187,1);
-    margin: .2em 0;
+    margin: .5em 0 0;
+    position: relative;
+    min-height: 100px;
+}
+
+#content .description img {
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#content .description span {
+    margin-left: 100px;
+    display: inline-block;
 }
 
 #content .product:hover .description {
