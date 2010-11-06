@@ -16,7 +16,7 @@ a { text-decoration: none; }
 
 /* Top navigation */
 
-nav { background: rgba(71,61,46,.5); }
+nav { background: rgba(181,201,118,.7); }
 
 nav ul { overflow: hidden; }
 
@@ -37,6 +37,7 @@ nav a { color: rgb(256, 256, 256); display: inline-block; padding: .5em; }
 #content a { color: rgba(71,61,46,.7) }
 
 #content h2 a {
+    -webkit-transition: all 0.3s ease-in;
     text-shadow: 1px 1px 2px rgba(238,236,187,1);
     font-weight: bold;
 }
@@ -86,6 +87,7 @@ nav a { color: rgb(256, 256, 256); display: inline-block; padding: .5em; }
 }
 
 #content .description {
+    -webkit-transition: all 0.3s ease-in;
     color: rgba(124,118,73,.8);
     text-shadow: 1px 1px 1px rgba(238,236,187,1);
     margin: .2em 0;
