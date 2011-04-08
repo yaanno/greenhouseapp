@@ -7,6 +7,7 @@
     
     var productapi = 'data/products.json',
         $feedbackDiv = $('#feedback'),
+        $body = $(document.body),
         $syncBtn = $('#sync');
     
     // utility functions
@@ -134,11 +135,13 @@
         
         // show home
         this.get('#/', function (context) {
+            $body[0].className = 'home';
             context.app.swap('');
         });
         
         // list products
         this.get('#/products', function (context) {
+            $body[0].className = 'products';
             var products = Product.all();
             if (products.length) {
                 var out = {
@@ -154,6 +157,7 @@
         
         // show product item
         this.get('#/product/:name/:id', function (context) {
+            $body[0].className = 'product';
             var product = Product.find(this.params.id),
                 out = {
                     app: this,
@@ -165,6 +169,7 @@
         
         // product listing filtered by tag name
         this.get('#/products/by_tag/:tag', function (context) {
+            $body[0].className = 'products';
             var tag = this.params.tag.replace('-', ' '),
                 products = Product.find_by_tag(tag),
                 out = {
@@ -172,7 +177,11 @@
                     data: products,
                     template: 'products/all'
                 };
-            this.trigger('render', out);
+            if (products.length) {
+                this.trigger('render', out);
+            } else {
+                // render not found
+            }
         });
         
         // add item to cart
@@ -213,6 +222,7 @@
         
         // show cart
         this.get('#/cart', function (context) {
+            $body[0].className = 'cart';
             // display cart content
             var cart = Cart.all(),
                 data = [],

@@ -11,7 +11,8 @@
         </a>
     </h2>
     <p class='description' itemprop="description">
-        <%= product.description %>
+        <img src="assets/img/bag.jpeg" alt="<%= product.title %>">
+        <span><%= product.description %></span>
     </p>
     <ul>
         <% for(var category in product.categories) { %>
@@ -24,18 +25,21 @@
         </li>
         <% } %>
     </ul>
-    <p>
-        <span class="price" itemprop="price"><%= product.price %>$</span>
+    <div class="buy">
+        Price: <span class="price" itemprop="price"><%= product.price %>$</span>
         <form action="#/cart" method="post" accept-charset="utf-8">
             <label>
                 Amount:
                 <select name="amount">
                     <option value="1">1</option>
                     <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                 </select>
             </label>
             <input type="hidden" name="id" value="<%= product.id %>">
-            <input type="submit" name="submit" value="Buy">
+            <input class="button" type="submit" name="submit" value="Buy">
         </form>
-    </p>
+    </div>
 </div>
