@@ -2,3 +2,4 @@
 
 # we don't need temporary data
 /data/
+.DS_Store
